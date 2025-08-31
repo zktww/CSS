@@ -1,41 +1,950 @@
-<html>
-    <head>
-        <link rel="icon" href="./favicon.ico" type="image/x-icon">
-        <title>cssLengthUnit</title>
-    </head>
-    <body>
-        <table>
-            <tr><td colspan="3"><h2>绝对长度单位</h1></td></tr>
-            <tr><td>这是1cm</td><td style="width: 1.5in;"><div style="width: 1cm;"></div></td><td></td></tr>
-            <tr><td>这是1mm</td><td><div style="width: 1mm;"></div></td><td></td></tr>
-            <tr><td>这是1Q</td><td><div style="width: 1Q;"></div></td><td></td></tr>
-            <tr><td>这是1in</td><td><div style="width: 1in;"></div></td><td></td></tr>
-            <tr><td>这是1pc</td><td><div style="width: 1pc;"></div></td><td></td></tr>
-            <tr><td>这是1pt</td><td><div style="width: 1pt;"></div></td><td></td></tr>
-            <tr><td>这是1px</td><td><div style="width: 1px;"></div></td><td></td></tr>
-            <tr><td colspan="3"><h2>相对长度单位</h1></td></tr>
-            <tr><td>这是1em</td><td><div style="width: 1em;"></div></td><td></td></tr>
-            <tr><td>这是1rem</td><td><div style="width: 1rem;"></div></td><td></td></tr>
-            <tr><td>这是1ex</td><td><div style="width: 1ex;"></div></td><td></td></tr>
-            <tr><td>这是1ch</td><td><div style="width: 1ch;"></div></td><td></td></tr>
-            <tr><td>这是1vw</td><td><div style="width: 1vw;"></div></td><td></td></tr>
-            <tr><td>这是1vh</td><td><div style="width: 1vh;"></div></td><td></td></tr>
-            <tr><td>这是1vmin</td><td><div style="width: 1vmin;"></div></td><td></td></tr>
-            <tr><td>这是1vmax</td><td><div style="width: 1vmax;"></div></td><td></td></tr>
-            <tr><td>这是1%</td><td><div style="width: 1%;"></div></td><td></td></tr>
-            <tr><td>这是1cap</td><td><div style="width: 1cap;"></div></td><td></td></tr>
-            <tr><td>这是1ic</td><td><div style="width: 1ic;"></div></td><td></td></tr>
-            <tr><td>这是1lh</td><td><div style="width: 1lh;"></div></td><td></td></tr>
-            <tr><td>这是1rlh</td><td><div style="width: 1rlh;"></div></td><td></td></tr>
-            <tr><td>这是1vi</td><td><div style="width: 1vi;"></div></td><td></td></tr>
-            <tr><td>这是1vb</td><td><div style="width: 1vb;"></div></td><td></td></tr>
-        </table>
-
-    </body>
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>科技风 CSS 长度单位探索器</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        div {
-            height: 20px;
-            background-color: #07c160;
+        /* --- 科技风主题变量 --- */
+        :root {
+            --color-primary: #00eeff; /* 霓虹蓝 */
+            --color-secondary: #ff00ea; /* 霓虹粉 */
+            --color-accent: #00ff9d; /* 霓虹绿 */
+            --color-background: #0a0e17; /* 深蓝黑 */
+            --color-surface: #131c2e; /* 卡片背景 */
+            --color-text: #e0f7ff; /* 主要文字 */
+            --color-text-secondary: #a0c8e0; /* 次要文字 */
+            --color-border: rgba(0, 238, 255, 0.3); /* 霓虹蓝边框 */
+            --color-glow-primary: 0 0 8px var(--color-primary), 0 0 16px rgba(0, 238, 255, 0.5);
+            --color-glow-secondary: 0 0 8px var(--color-secondary), 0 0 16px rgba(255, 0, 234, 0.5);
+            --transition-speed: 0.4s;
+            --border-radius: 10px;
         }
+
+        /* --- 基础重置与全局样式 --- */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', 'Roboto', 'Helvetica Neue', 'Arial', sans-serif, 'Courier New';
+            background-color: var(--color-background);
+            color: var(--color-text);
+            line-height: 1.6;
+            padding: 20px;
+            background-image:
+                    radial-gradient(circle at 10% 20%, rgba(0, 100, 150, 0.1) 0%, transparent 20%),
+                    radial-gradient(circle at 90% 80%, rgba(150, 0, 150, 0.1) 0%, transparent 20%);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* --- 动画定义 --- */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes pulseGlow {
+            0% { box-shadow: 0 0 5px var(--color-primary), 0 0 10px rgba(0, 238, 255, 0.3); }
+            50% { box-shadow: 0 0 15px var(--color-primary), 0 0 30px rgba(0, 238, 255, 0.6); }
+            100% { box-shadow: 0 0 5px var(--color-primary), 0 0 10px rgba(0, 238, 255, 0.3); }
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+
+        /* --- 标题与副标题 --- */
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            animation: fadeInUp 1s ease-out;
+            position: relative;
+        }
+
+        header::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 4px;
+            background: linear-gradient(90deg, var(--color-primary), var(--color-secondary));
+            border-radius: 2px;
+        }
+
+        h1 {
+            color: var(--color-primary);
+            margin-bottom: 15px;
+            font-size: 2.8rem;
+            text-shadow: var(--color-glow-primary);
+            letter-spacing: 1px;
+        }
+
+        .subtitle {
+            color: var(--color-text-secondary);
+            font-size: 1.2rem;
+        }
+
+        /* --- 卡片与布局 --- */
+        .dashboard {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+            margin-bottom: 35px;
+        }
+
+        @media (max-width: 900px) {
+            .dashboard {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .card {
+            background-color: var(--color-surface);
+            border-radius: var(--border-radius);
+            padding: 25px;
+            transition: all var(--transition-speed) ease;
+            border: 1px solid var(--color-border);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            position: relative;
+            overflow: hidden;
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 238, 255, 0.1), transparent);
+            transition: 0.5s;
+        }
+
+        .card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4), var(--color-glow-primary);
+        }
+
+        .card:hover::before {
+            left: 100%;
+        }
+
+        .card-title {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 25px;
+            color: var(--color-primary);
+            font-size: 1.5rem;
+            text-shadow: var(--color-glow-primary);
+        }
+
+        .card-title i {
+            font-size: 1.7rem;
+        }
+
+        /* --- 控件样式 --- */
+        .controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .control-group {
+            flex: 1;
+            min-width: 180px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 500;
+            color: var(--color-text-secondary);
+            font-size: 0.95rem;
+        }
+
+        input[type="range"] {
+            -webkit-appearance: none;
+            width: 100%;
+            height: 6px;
+            border-radius: 3px;
+            background: linear-gradient(90deg, var(--color-surface), var(--color-primary));
+            outline: none;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: var(--color-primary);
+            cursor: pointer;
+            box-shadow: var(--color-glow-primary);
+            transition: all 0.2s ease;
+        }
+
+        input[type="range"]::-webkit-slider-thumb:hover {
+            transform: scale(1.2);
+            box-shadow: var(--color-glow-primary), 0 0 20px var(--color-primary);
+        }
+
+        input[type="number"], select, button {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid var(--color-border);
+            border-radius: var(--border-radius);
+            font-size: 16px;
+            background-color: rgba(10, 20, 35, 0.7);
+            color: var(--color-text);
+            transition: var(--transition-speed);
+        }
+
+        input[type="number"]:focus, select:focus {
+            outline: none;
+            border-color: var(--color-primary);
+            box-shadow: 0 0 0 2px rgba(0, 238, 255, 0.3), var(--color-glow-primary);
+        }
+
+        select {
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2300eeff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+            background-size: 16px;
+            padding-right: 40px;
+        }
+
+        button {
+            background: linear-gradient(90deg, var(--color-primary), var(--color-accent));
+            color: var(--color-background);
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+            box-shadow: var(--color-glow-primary);
+            position: relative;
+            overflow: hidden;
+        }
+
+        button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+            transition: 0.5s;
+        }
+
+        button:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--color-glow-primary), 0 5px 15px rgba(0, 0, 0, 0.4);
+        }
+
+        button:hover::before {
+            left: 100%;
+        }
+
+        button:active {
+            transform: translateY(1px);
+        }
+
+        /* --- 演示区 --- */
+        .demo-area {
+            text-align: center;
+        }
+
+        #demo-bar-container {
+            height: 60px;
+            background-color: rgba(20, 30, 50, 0.7);
+            border-radius: var(--border-radius);
+            margin: 25px 0;
+            overflow: hidden;
+            position: relative;
+            border: 1px solid var(--color-border);
+        }
+
+        #demo-bar {
+            height: 100%;
+            background: linear-gradient(90deg, var(--color-primary), var(--color-secondary));
+            width: 0;
+            transition: width 1.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+            box-shadow: var(--color-glow-primary);
+        }
+
+        #demo-text {
+            font-weight: 500;
+            margin-top: 20px;
+            min-height: 1.6em;
+            text-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
+        }
+
+        /* --- 对比器 --- */
+        .comparison-tool {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+
+        .comparison-row {
+            display: flex;
+            align-items: end;
+            gap: 20px;
+        }
+
+        .comparison-input {
+            flex: 4; /* 增大占比 */
+            display: flex;
+            gap: 15px;
+            align-items: end;
+        }
+
+        .comparison-input > div {
+            flex: 1;
+        }
+
+        .comparison-result {
+            flex: 4;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: rgba(20, 50, 80, 0.3);
+            padding: 20px;
+            border-radius: var(--border-radius);
+            border: 1px solid var(--color-border);
+        }
+
+        .bar-visual {
+            height: 25px;
+            border-radius: 12px;
+            transition: width 0.6s cubic-bezier(0.22, 0.61, 0.36, 1);
+        }
+
+        .bar-visual:nth-child(1) {
+            background: linear-gradient(90deg, var(--color-primary), var(--color-accent));
+            box-shadow: var(--color-glow-primary);
+        }
+        .bar-visual:nth-child(2) {
+            background: linear-gradient(90deg, var(--color-secondary), var(--color-primary));
+            box-shadow: var(--color-glow-secondary);
+        }
+
+        /* 调整扫描按钮样式 */
+        #compare-btn {
+            flex: 1; /* 减小占比 */
+            max-width: 120px; /* 限制最大宽度 */
+            padding: 12px 5px; /* 调整内边距 */
+            font-size: 0.85rem; /* 调整字体大小 */
+        }
+
+        /* --- 表格 --- */
+        .unit-table-container {
+            overflow-x: auto;
+            border-radius: var(--border-radius);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
+            border: 1px solid var(--color-border);
+            animation: fadeInUp 1s ease-out 0.2s both;
+        }
+
+        .unit-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            background-color: var(--color-surface);
+        }
+
+        /* 修改表头样式 */
+        .unit-table thead th.category {
+            background: linear-gradient(135deg, var(--color-secondary), var(--color-accent));
+            color: var(--color-background);
+            text-align: left;
+            padding: 25px 20px; /* 调整内边距 */
+            font-weight: 600;
+            font-size: 1.4rem; /* 稍小字体 */
+            text-shadow: 0 1px 2px rgba(0,0,0,0.5);
+            border-top-left-radius: var(--border-radius);
+            border-top-right-radius: var(--border-radius);
+            position: relative;
+            overflow: hidden;
+        }
+        /* 为表头添加轻微的发光效果 */
+        .unit-table thead th.category::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            pointer-events: none;
+            background: linear-gradient(120deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            opacity: 0.3;
+        }
+
+        .unit-table th:not(.category) {
+            background-color: rgba(0, 100, 150, 0.2); /* 更柔和的背景 */
+            color: var(--color-primary);
+            text-align: left;
+            padding: 18px 20px;
+            font-weight: 500;
+            border-bottom: 1px solid var(--color-border);
+        }
+
+
+        .unit-table td {
+            padding: 18px 20px;
+            border-bottom: 1px solid rgba(0, 238, 255, 0.1);
+        }
+
+        .unit-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .unit-table tr:hover td {
+            background-color: rgba(0, 238, 255, 0.05);
+        }
+
+        .unit-name {
+            font-weight: 600;
+            color: var(--color-primary);
+            width: 12%;
+            text-shadow: 0 0 5px rgba(0, 238, 255, 0.5);
+        }
+
+        .unit-description {
+            width: 35%;
+        }
+
+        .unit-visual {
+            width: 35%;
+        }
+
+        .visual-bar-container {
+            height: 30px;
+            background-color: rgba(20, 30, 50, 0.7);
+            border-radius: 15px;
+            overflow: hidden;
+            position: relative;
+            border: 1px solid var(--color-border);
+        }
+
+        .visual-bar {
+            height: 100%;
+            background: linear-gradient(90deg, var(--color-accent), var(--color-primary));
+            width: 0;
+            transition: width 1s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .unit-value {
+            width: 18%;
+            text-align: right;
+            font-family: 'Courier New', monospace;
+            font-weight: 600;
+            color: var(--color-accent);
+        }
+
+        .unit-value.error {
+            color: var(--color-secondary);
+            font-style: italic;
+        }
+
+        /* --- 页脚 --- */
+        footer {
+            text-align: center;
+            margin-top: 50px;
+            padding: 25px;
+            color: var(--color-text-secondary);
+            font-size: 0.9rem;
+            animation: fadeInUp 1s ease-out 0.4s both;
+        }
+
+        /* --- 工具类 --- */
+        .pulse-glow {
+            animation: pulseGlow 2s infinite;
+        }
+
+        .float {
+            animation: float 3s ease-in-out infinite;
+        }
+        /* 在样式部分添加以下CSS代码 */
+        .blog-badge {
+            background: linear-gradient(135deg, var(--color-secondary), var(--color-accent));
+            color: var(--color-background);
+            padding: 10px 15px;
+            border-radius: 30px;
+            font-weight: bold;
+            font-size: 0.9rem;
+            box-shadow: var(--color-glow-secondary);
+            z-index: 1000;
+            transition: all var(--transition-speed) ease;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            display: inline-block;
+            margin-top: 15px;
+        }
+
+        .blog-badge:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: var(--color-glow-secondary), 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .blog-badge a {
+            color: var(--color-background);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .blog-badge i {
+            font-size: 1.1rem;
+        }
+
     </style>
+</head>
+<body>
+<div class="container">
+    <header>
+        <h1><i class="fas fa-microchip"></i> 量子 CSS 长度单位探索器</h1>
+        <p class="subtitle">穿越数字维度，洞悉像素与视口的奥秘</p>
+        <div class="blog-badge">
+            <a href="https://www.cnblogs.com/zktww" target="_blank">
+                <i class="fas fa-blog"></i> 丿似锦
+            </a>
+        </div>
+    </header>
+
+    <main>
+        <!-- 控制面板 -->
+        <div class="dashboard">
+            <div class="card">
+                <h2 class="card-title"><i class="fas fa-cogs"></i> 宇宙参数</h2>
+                <div class="controls">
+                    <div class="control-group">
+                        <label for="font-size-control"><i class="fas fa-font"></i> 基准字体大小 (px)</label>
+                        <input type="range" id="font-size-control" min="10" max="30" value="16">
+                        <span id="font-size-value">16 px</span>
+                    </div>
+                    <div class="control-group">
+                        <label for="container-width-control"><i class="fas fa-expand-arrows-alt"></i> 容器宽度 (px)</label>
+                        <input type="range" id="container-width-control" min="200" max="2000" value="800">
+                        <span id="container-width-value">800 px</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 演示台 -->
+            <div class="card demo-area">
+                <h2 class="card-title"><i class="fas fa-flask"></i> 单位反应堆</h2>
+                <div class="controls">
+                    <div class="control-group">
+                        <label for="demo-unit-select"><i class="fas fa-ruler"></i> 选择单位</label>
+                        <select id="demo-unit-select">
+                            <option value="px">px (像素)</option>
+                            <option value="em">em (相对于字体)</option>
+                            <option value="rem">rem (相对于根)</option>
+                            <option value="vw">vw (视口宽度)</option>
+                            <option value="vh">vh (视口高度)</option>
+                            <option value="cm">cm (厘米)</option>
+                            <option value="in">in (英寸)</option>
+                            <option value="rlh">rlh (根行高)</option>
+                        </select>
+                    </div>
+                    <div class="control-group">
+                        <label for="demo-value-control"><i class="fas fa-sort-numeric-up"></i> 数值</label>
+                        <input type="number" id="demo-value-control" min="0.1" max="100" step="0.1" value="2">
+                    </div>
+                    <div class="control-group">
+                        <label>&nbsp;</label>
+                        <button id="apply-demo-btn" class="pulse-glow"><i class="fas fa-bolt"></i> 启动</button>
+                    </div>
+                </div>
+                <div id="demo-bar-container">
+                    <div id="demo-bar"></div>
+                </div>
+                <p id="demo-text">等待能量注入...</p>
+            </div>
+        </div>
+
+        <!-- 对比器 -->
+        <div class="card comparison-tool">
+            <h2 class="card-title"><i class="fas fa-balance-scale"></i> 时空对比仪</h2>
+            <div class="comparison-row">
+                <div class="comparison-input">
+                    <div>
+                        <label for="compare-value-1"><i class="fas fa-ruler"></i> 单位 A</label>
+                        <input type="number" id="compare-value-1" min="0.001" step="0.1" value="1" placeholder="数值">
+                    </div>
+                    <div>
+                        <label for="compare-unit-1">&nbsp;</label>
+                        <select id="compare-unit-1">
+                            <option value="px">px</option>
+                            <option value="em" selected>em</option>
+                            <option value="rem">rem</option>
+                            <option value="vw">vw</option>
+                            <option value="vh">vh</option>
+                            <option value="%">%</option>
+                            <option value="cm">cm</option>
+                            <option value="in">in</option>
+                            <option value="pt">pt</option>
+                            <option value="pc">pc</option>
+                            <option value="rlh">rlh</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="comparison-input">
+                    <div>
+                        <label for="compare-value-2"><i class="fas fa-ruler"></i> 单位 B</label>
+                        <input type="number" id="compare-value-2" min="0.001" step="0.1" value="16" placeholder="数值">
+                    </div>
+                    <div>
+                        <label for="compare-unit-2">&nbsp;</label>
+                        <select id="compare-unit-2">
+                            <option value="px" selected>px</option>
+                            <option value="em">em</option>
+                            <option value="rem">rem</option>
+                            <option value="vw">vw</option>
+                            <option value="vh">vh</option>
+                            <option value="%">%</option>
+                            <option value="cm">cm</option>
+                            <option value="in">in</option>
+                            <option value="pt">pt</option>
+                            <option value="pc">pc</option>
+                            <option value="rlh">rlh</option>
+                        </select>
+                    </div>
+                </div>
+                <button id="compare-btn" class="float"><i class="fas fa-exchange-alt"></i> 扫描</button>
+            </div>
+            <div class="comparison-row">
+                <div class="comparison-result">
+                    <span id="compare-result-text">-</span>
+                    <div style="flex:1; margin: 0 20px;">
+                        <div class="visual-bar-container">
+                            <div id="compare-bar-1" class="bar-visual"></div>
+                        </div>
+                        <div class="visual-bar-container" style="margin-top: 10px;">
+                            <div id="compare-bar-2" class="bar-visual"></div>
+                        </div>
+                    </div>
+                    <span id="compare-result-ratio">-</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- 单位图鉴 -->
+        <div class="unit-table-container">
+            <table class="unit-table">
+                <thead>
+                <tr>
+                    <th class="category" colspan="4"><i class="fas fa-infinity"></i> 绝对维度 (Absolute)</th>
+                </tr>
+                <tr>
+                    <th>单位</th>
+                    <th>描述</th>
+                    <th>可视化</th>
+                    <th>计算值 (px)</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr><td class="unit-name">cm</td><td class="unit-description">厘米</td><td class="unit-visual"><div class="visual-bar-container"><div class="visual-bar" data-unit="cm" data-value="1"></div></div></td><td class="unit-value">-</td></tr>
+                <tr><td class="unit-name">mm</td><td class="unit-description">毫米</td><td class="unit-visual"><div class="visual-bar-container"><div class="visual-bar" data-unit="mm" data-value="1"></div></div></td><td class="unit-value">-</td></tr>
+                <tr><td class="unit-name">Q</td><td class="unit-description">四分之一毫米</td><td class="unit-visual"><div class="visual-bar-container"><div class="visual-bar" data-unit="Q" data-value="1"></div></div></td><td class="unit-value">-</td></tr>
+                <tr><td class="unit-name">in</td><td class="unit-description">英寸 (1in = 96px)</td><td class="unit-visual"><div class="visual-bar-container"><div class="visual-bar" data-unit="in" data-value="1"></div></div></td><td class="unit-value">-</td></tr>
+                <tr><td class="unit-name">pc</td><td class="unit-description">派卡 (1pc = 16px)</td><td class="unit-visual"><div class="visual-bar-container"><div class="visual-bar" data-unit="pc" data-value="1"></div></div></td><td class="unit-value">-</td></tr>
+                <tr><td class="unit-name">pt</td><td class="unit-description">点 (1pt = 1/72in)</td><td class="unit-visual"><div class="visual-bar-container"><div class="visual-bar" data-unit="pt" data-value="1"></div></div></td><td class="unit-value">-</td></tr>
+                <tr><td class="unit-name">px</td><td class="unit-description">像素 (相对于设备)</td><td class="unit-visual"><div class="visual-bar-container"><div class="visual-bar" data-unit="px" data-value="1"></div></div></td><td class="unit-value">-</td></tr>
+                </tbody>
+
+                <thead>
+                <tr>
+                    <th class="category" colspan="4"><i class="fas fa-link"></i> 相对维度 (Relative)</th>
+                </tr>
+                <tr>
+                    <th>单位</th>
+                    <th>描述</th>
+                    <th>可视化</th>
+                    <th>计算值 (px)</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr><td class="unit-name">em</td><td class="unit-description">相对于元素字体大小</td><td class="unit-visual"><div class="visual-bar-container"><div class="visual-bar" data-unit="em" data-value="1"></div></div></td><td class="unit-value">-</td></tr>
+                <tr><td class="unit-name">rem</td><td class="unit-description">相对于根元素字体大小</td><td class="unit-visual"><div class="visual-bar-container"><div class="visual-bar" data-unit="rem" data-value="1"></div></div></td><td class="unit-value">-</td></tr>
+                <tr><td class="unit-name">ex</td><td class="unit-description">相对于字符 "x" 的高度</td><td class="unit-visual"><div class="visual-bar-container"><div class="visual-bar" data-unit="ex" data-value="1"></div></div></td><td class="unit-value">-</td></tr>
+                <tr><td class="unit-name">ch</td><td class="unit-description">相对于字符 "0" 的宽度</td><td class="unit-visual"><div class="visual-bar-container"><div class="visual-bar" data-unit="ch" data-value="1"></div></div></td><td class="unit-value">-</td></tr>
+                <tr><td class="unit-name">vw</td><td class="unit-description">视口宽度的 1%</td><td class="unit-visual"><div class="visual-bar-container"><div class="visual-bar" data-unit="vw" data-value="1"></div></div></td><td class="unit-value">-</td></tr>
+                <tr><td class="unit-name">vh</td><td class="unit-description">视口高度的 1%</td><td class="unit-visual"><div class="visual-bar-container"><div class="visual-bar" data-unit="vh" data-value="1"></div></div></td><td class="unit-value">-</td></tr>
+                <tr><td class="unit-name">vmin</td><td class="unit-description">视口较小尺寸的 1%</td><td class="unit-visual"><div class="visual-bar-container"><div class="visual-bar" data-unit="vmin" data-value="1"></div></div></td><td class="unit-value">-</td></tr>
+                <tr><td class="unit-name">vmax</td><td class="unit-description">视口较大尺寸的 1%</td><td class="unit-visual"><div class="visual-bar-container"><div class="visual-bar" data-unit="vmax" data-value="1"></div></div></td><td class="unit-value">-</td></tr>
+                <tr><td class="unit-name">%</td><td class="unit-description">相对于父元素 (通常宽度)</td><td class="unit-visual"><div class="visual-bar-container"><div class="visual-bar" data-unit="%" data-value="1"></div></div></td><td class="unit-value">-</td></tr>
+                <tr><td class="unit-name">cap</td><td class="unit-description">相对于大写字母高度</td><td class="unit-visual"><div class="visual-bar-container"><div class="visual-bar" data-unit="cap" data-value="1"></div></div></td><td class="unit-value">-</td></tr>
+                <tr><td class="unit-name">ic</td><td class="unit-description">相对于表意字符宽度</td><td class="unit-visual"><div class="visual-bar-container"><div class="visual-bar" data-unit="ic" data-value="1"></div></div></td><td class="unit-value">-</td></tr>
+                <tr><td class="unit-name">lh</td><td class="unit-description">相对于自身行高</td><td class="unit-visual"><div class="visual-bar-container"><div class="visual-bar" data-unit="lh" data-value="1"></div></div></td><td class="unit-value">-</td></tr>
+                <tr><td class="unit-name">rlh</td><td class="unit-description">相对于根元素行高</td><td class="unit-visual"><div class="visual-bar-container"><div class="visual-bar" data-unit="rlh" data-value="1"></div></div></td><td class="unit-value">-</td></tr>
+                <tr><td class="unit-name">vi</td><td class="unit-description">相对于视口内联尺寸</td><td class="unit-visual"><div class="visual-bar-container"><div class="visual-bar" data-unit="vi" data-value="1"></div></div></td><td class="unit-value">-</td></tr>
+                <tr><td class="unit-name">vb</td><td class="unit-description">相对于视口块级尺寸</td><td class="unit-visual"><div class="visual-bar-container"><div class="visual-bar" data-unit="vb" data-value="1"></div></div></td><td class="unit-value">-</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </main>
+
+    <footer>
+        <p>量子 CSS 长度单位探索器 v2.0 | 实时计算 | 动态可视化 | 多维对比</p>
+        <p>我的博客：<a href="https://www.cnblogs.com/zktww" target="_blank">丿似锦</a></p>
+    </footer>
+</div>
+
+<script>
+    // --- Configuration and State ---
+    const state = {
+        baseFontSize: 16,
+        containerWidth: 800,
+        demoUnit: 'px',
+        demoValue: 2
+    };
+
+    // --- Helper Functions ---
+    function getRootElementFontSize() {
+        return parseFloat(getComputedStyle(document.documentElement).fontSize) || 16;
+    }
+
+    function getRootElementLineHeight() {
+        const htmlStyles = getComputedStyle(document.documentElement);
+        const lineHeightStr = htmlStyles.lineHeight;
+        const fontSize = parseFloat(htmlStyles.fontSize) || 16;
+
+        if (lineHeightStr && !isNaN(lineHeightStr) && lineHeightStr > 0) {
+            return parseFloat(lineHeightStr) * fontSize;
+        }
+
+        if (lineHeightStr && lineHeightStr.endsWith('px')) {
+            return parseFloat(lineHeightStr);
+        }
+
+        return fontSize * 1.2;
+    }
+
+    function getContainerSize() {
+        return {
+            width: window.innerWidth,
+            height: window.innerHeight
+        };
+    }
+
+    function calculateUnitValue(unit, value) {
+        const rootFontSize = getRootElementFontSize();
+        const rootLineHeight = getRootElementLineHeight();
+        const containerSize = getContainerSize();
+        const smallerViewportDimension = Math.min(containerSize.width, containerSize.height);
+        const largerViewportDimension = Math.max(containerSize.width, containerSize.height);
+        const elementFontSize = parseFloat(getComputedStyle(document.body).fontSize || state.baseFontSize);
+        const elementLineHeight = parseFloat(getComputedStyle(document.body).lineHeight || (elementFontSize * 1.2));
+
+        let result;
+        switch (unit) {
+            case 'cm': result = value * 96 / 2.54; break;
+            case 'mm': result = value * 96 / 25.4; break;
+            case 'Q': result = value * 96 / 101.6; break;
+            case 'in': result = value * 96; break;
+            case 'pc': result = value * 16; break;
+            case 'pt': result = value * 96 / 72; break;
+            case 'px': result = value; break;
+            case 'em': result = value * elementFontSize; break;
+            case 'rem': result = value * rootFontSize; break;
+            case 'ex': result = value * (elementFontSize * 0.5); break;
+            case 'ch': result = value * (elementFontSize * 0.6); break;
+            case 'vw': result = value * containerSize.width / 100; break;
+            case 'vh': result = value * containerSize.height / 100; break;
+            case 'vmin': result = value * smallerViewportDimension / 100; break;
+            case 'vmax': result = value * largerViewportDimension / 100; break;
+            case '%': result = value * state.containerWidth / 100; break;
+            case 'cap': result = value * (elementFontSize * 0.7); break;
+            case 'ic': result = value * (elementFontSize * 1.2); break;
+            case 'lh': result = value * elementLineHeight; break;
+            case 'rlh': result = value * rootLineHeight; break;
+            case 'vi': result = value * containerSize.width / 100; break;
+            case 'vb': result = value * containerSize.height / 100; break;
+            default: result = NaN;
+        }
+
+        return isNaN(result) ? 0 : result;
+    }
+
+    function formatPixelValue(pxValue) {
+        if (isNaN(pxValue) || !isFinite(pxValue)) {
+            return { text: '计算错误', isError: true };
+        }
+        if (pxValue === 0) return { text: '0 px', isError: false };
+        if (pxValue < 1) return { text: `${pxValue.toFixed(3)} px`, isError: false };
+        if (pxValue < 10) return { text: `${pxValue.toFixed(2)} px`, isError: false };
+        return { text: `${Math.round(pxValue)} px`, isError: false };
+    }
+
+    // --- Main Update Logic ---
+    function updateVisuals() {
+        const bars = document.querySelectorAll('.visual-bar[data-unit][data-value]');
+        bars.forEach(bar => {
+            const unit = bar.getAttribute('data-unit');
+            const value = parseFloat(bar.getAttribute('data-value'));
+            const pixelValue = calculateUnitValue(unit, value);
+
+            if (!isNaN(pixelValue) && isFinite(pixelValue)) {
+                const displayWidth = Math.min(Math.max(pixelValue, 0), 400);
+                bar.style.width = `${displayWidth}px`;
+            } else {
+                bar.style.width = '0px';
+            }
+
+            const valueCell = bar.closest('tr').querySelector('.unit-value');
+            if (valueCell) {
+                const formattedValue = formatPixelValue(pixelValue);
+                valueCell.textContent = formattedValue.text;
+                if (formattedValue.isError) {
+                    valueCell.classList.add('error');
+                } else {
+                    valueCell.classList.remove('error');
+                }
+            }
+        });
+    }
+
+    function updateDemo() {
+        const demoBar = document.getElementById('demo-bar');
+        const demoText = document.getElementById('demo-text');
+        if (demoBar && demoText) {
+            const pixelValue = calculateUnitValue(state.demoUnit, state.demoValue);
+            const displayWidth = isNaN(pixelValue) || !isFinite(pixelValue) ? 0 : Math.min(Math.max(pixelValue, 0), 800);
+            demoBar.style.width = `${displayWidth}px`;
+
+            if (['em', 'rem', 'px', 'pt', 'pc'].includes(state.demoUnit)) {
+                demoText.style.fontSize = `${state.demoValue}${state.demoUnit}`;
+            } else {
+                demoText.style.fontSize = `${Math.min(pixelValue / 20, 24) || 16}px`;
+            }
+            demoText.textContent = `能量注入: ${state.demoValue} ${state.demoUnit}`;
+        }
+    }
+
+    function updateComparison() {
+        const unit1 = document.getElementById('compare-unit-1').value;
+        const value1 = parseFloat(document.getElementById('compare-value-1').value) || 0;
+        const unit2 = document.getElementById('compare-unit-2').value;
+        const value2 = parseFloat(document.getElementById('compare-value-2').value) || 0;
+
+        const px1 = calculateUnitValue(unit1, value1);
+        const px2 = calculateUnitValue(unit2, value2);
+
+        document.getElementById('compare-result-text').textContent =
+            `${value1} ${unit1} vs ${value2} ${unit2}`;
+
+        const validPx1 = isFinite(px1) ? px1 : 0;
+        const validPx2 = isFinite(px2) ? px2 : 0;
+        const maxWidth = Math.max(validPx1, validPx2, 1);
+
+        const width1 = (validPx1 / maxWidth) * 100;
+        const width2 = (validPx2 / maxWidth) * 100;
+
+        document.getElementById('compare-bar-1').style.width = `${width1}%`;
+        document.getElementById('compare-bar-2').style.width = `${width2}%`;
+
+        let ratioText = '-';
+        if (isFinite(px1) && isFinite(px2) && px2 !== 0) {
+            const ratio = (px1 / px2).toFixed(4);
+            ratioText = `比例: 1 : ${ratio}`;
+        } else if (px2 === 0 && px1 !== 0) {
+            ratioText = `比例: 1 : ∞`;
+        } else {
+            ratioText = `比例: 计算错误`;
+        }
+        document.getElementById('compare-result-ratio').textContent = ratioText;
+    }
+
+    // --- Event Listeners ---
+    document.getElementById('font-size-control').addEventListener('input', function() {
+        state.baseFontSize = parseInt(this.value);
+        document.getElementById('font-size-value').textContent = `${state.baseFontSize} px`;
+        document.body.style.fontSize = `${state.baseFontSize}px`;
+        updateVisuals();
+        updateDemo();
+        updateComparison();
+    });
+
+    document.getElementById('container-width-control').addEventListener('input', function() {
+        state.containerWidth = parseInt(this.value);
+        document.getElementById('container-width-value').textContent = `${state.containerWidth} px`;
+        updateVisuals();
+        updateDemo();
+        updateComparison();
+    });
+
+    document.getElementById('demo-unit-select').addEventListener('change', function() {
+        state.demoUnit = this.value;
+    });
+
+    document.getElementById('demo-value-control').addEventListener('change', function() {
+        state.demoValue = parseFloat(this.value) || 1;
+    });
+
+    document.getElementById('apply-demo-btn').addEventListener('click', function() {
+        this.classList.remove('pulse-glow');
+        void this.offsetWidth;
+        this.classList.add('pulse-glow');
+        updateDemo();
+    });
+
+    document.getElementById('compare-btn').addEventListener('click', updateComparison);
+
+    // --- Initialize on load ---
+    document.addEventListener('DOMContentLoaded', () => {
+        document.documentElement.style.lineHeight = '1.5';
+
+        document.body.style.fontSize = `${state.baseFontSize}px`;
+        document.getElementById('font-size-value').textContent = `${state.baseFontSize} px`;
+        document.getElementById('container-width-value').textContent = `${state.containerWidth} px`;
+
+        updateVisuals();
+        updateDemo();
+        updateComparison();
+    });
+
+    let resizeTimeout;
+    window.addEventListener('resize', () => {
+        clearTimeout(resizeTimeout);
+        resizeTimeout = setTimeout(() => {
+            updateVisuals();
+            updateDemo();
+            updateComparison();
+        }, 150);
+    });
+</script>
+</body>
 </html>
+
+
+
